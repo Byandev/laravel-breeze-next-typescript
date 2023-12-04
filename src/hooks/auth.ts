@@ -44,20 +44,18 @@ export const useAuth = ({
       })
   }
 
-  const login = async ({ setErrors, setStatus, ...props }) => {
-    await csrf()
-
-    setErrors([])
-    setStatus(null)
-
-    axios
-      .post('/login', props)
-      .then(() => mutate())
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
-      })
+  const login = async (data: {
+    email: string
+    password: string
+    remember: boolean
+  }) => {
+    try {
+      await csrf()
+      await axios.post('/login', data)
+      mutate()
+    } catch (error) {
+      throw error
+    }
   }
 
   const forgotPassword = async ({ setErrors, setStatus, email }) => {
