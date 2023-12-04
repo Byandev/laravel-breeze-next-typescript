@@ -53,7 +53,7 @@ const LoginPage = () => {
           onSubmit={submitForm}
           validationSchema={LoginSchema}
           initialValues={{ email: '', password: '', remember: false }}>
-          <Form>
+          <Form className="space-y-4">
             <div>
               <Field
                 id="email"
@@ -70,7 +70,7 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="mt-4">
+            <div className="">
               <Field
                 id="password"
                 name="password"
@@ -86,7 +86,7 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between">
               <label htmlFor="remember" className="inline-flex items-center">
                 <Field
                   type="checkbox"
@@ -111,6 +111,14 @@ const LoginPage = () => {
               className="mt-12 w-full px-4 py-3 bg-[#22A2BF] rounded-2xl text-white font-bold tracking-[-0.2px]">
               Login
             </button>
+
+            <div>
+              <Link
+                href="/register"
+                className="text-[#187691] text-sm leading-[150%] tracking-[-0.4px] font-bold">
+                Register account
+              </Link>
+            </div>
           </Form>
         </Formik>
       </div>

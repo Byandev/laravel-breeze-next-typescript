@@ -1,110 +1,147 @@
 'use client'
-
 import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
-import { useState } from 'react'
+import * as Yup from 'yup'
+import axios, { AxiosError } from 'axios'
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 
-const Register = () => {
+import { useAuth } from '@/hooks/auth'
+
+interface Values {
+  name: string
+  email: string
+  password: string
+  password_confirmation: string
+}
+
+const RegisterPage = () => {
   const { register } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const [errors, setErrors] = useState([])
-
-  const submitForm = event => {
-    event.preventDefault()
-
-    register({
-      name,
-      email,
-      password,
-      password_confirmation: passwordConfirmation,
-      setErrors,
-    })
+  const submitForm = async (
+    values: Values,
+    { setSubmitting, setErrors }: FormikHelpers<Values>,
+  ): Promise<any> => {
+    try {
+      await register(values)
+    } catch (error: Error | AxiosError | any) {
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
+        setErrors(error.response?.data?.errors)
+      }
+    } finally {
+      setSubmitting(false)
+    }
   }
 
+  const RegisterSchema = Yup.object().shape({
+    name: Yup.string().required('The name field is required.'),
+    email: Yup.string()
+      .email('Invalid email')
+      .required('The email field is required.'),
+    password: Yup.string().required('The password field is required.'),
+  })
+
   return (
-    <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-      <div>dsa</div>
+    <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+      <div className="w-full sm:max-w-md mt-6 px-6 py-4 overflow-hidden">
+        <div className="space-y-3 text-black mb-12">
+          <h2 className="text-4xl leading-9 font-bold tracking-[-1px]">
+            Register
+          </h2>
+        </div>
 
-      <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-        <form onSubmit={submitForm}>
-          {/* Name */}
-          <div>
-            <label htmlFor="name">Name</label>
+        <Formik
+          onSubmit={submitForm}
+          validationSchema={RegisterSchema}
+          initialValues={{
+            name: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+          }}>
+          <Form className="space-y-4">
+            <div>
+              <Field
+                id="name"
+                name="name"
+                placeholder="Name"
+                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
+              />
 
-            <input
-              id="name"
-              type="text"
-              value={name}
-              className="block mt-1 w-full"
-              onChange={event => setName(event.target.value)}
-              required
-              autoFocus
-            />
-          </div>
+              <ErrorMessage
+                name="name"
+                component="span"
+                className="text-xs text-red-500"
+              />
+            </div>
 
-          {/* Email Address */}
-          <div className="mt-4">
-            <label htmlFor="email">Email</label>
+            <div>
+              <Field
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
+              />
 
-            <input
-              id="email"
-              type="email"
-              value={email}
-              className="block mt-1 w-full"
-              onChange={event => setEmail(event.target.value)}
-              required
-            />
-          </div>
+              <ErrorMessage
+                name="email"
+                component="span"
+                className="text-xs text-red-500"
+              />
+            </div>
 
-          {/* Password */}
-          <div className="mt-4">
-            <label htmlFor="password">Password</label>
+            <div className="">
+              <Field
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
+              />
 
-            <input
-              id="password"
-              type="password"
-              value={password}
-              className="block mt-1 w-full"
-              onChange={event => setPassword(event.target.value)}
-              required
-              autoComplete="new-password"
-            />
-          </div>
+              <ErrorMessage
+                name="password"
+                component="span"
+                className="text-xs text-red-500"
+              />
+            </div>
 
-          {/* Confirm Password */}
-          <div className="mt-4">
-            <label htmlFor="passwordConfirmation">Confirm Password</label>
+            <div className="">
+              <Field
+                id="password_confirmation"
+                name="password_confirmation"
+                type="password"
+                placeholder="Confirm Password"
+                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
+              />
 
-            <input
-              id="passwordConfirmation"
-              type="password"
-              value={passwordConfirmation}
-              className="block mt-1 w-full"
-              onChange={event => setPasswordConfirmation(event.target.value)}
-              required
-            />
-          </div>
+              <ErrorMessage
+                name="password_confirmation"
+                component="span"
+                className="text-xs text-red-500"
+              />
+            </div>
 
-          <div className="flex items-center justify-end mt-4">
-            <Link
-              href="/login"
-              className="underline text-sm text-gray-600 hover:text-gray-900">
-              Already registered?
-            </Link>
+            <button
+              type="submit"
+              className="w-full px-4 py-3 bg-[#22A2BF] rounded-2xl text-white font-bold tracking-[-0.2px]">
+              Register
+            </button>
 
-            <button className="ml-4">Register</button>
-          </div>
-        </form>
+            <div>
+              <Link
+                href="/login"
+                className="text-[#187691] text-sm leading-[150%] tracking-[-0.4px] font-bold">
+                Already registered?
+              </Link>
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   )
 }
 
-export default Register
+export default RegisterPage
