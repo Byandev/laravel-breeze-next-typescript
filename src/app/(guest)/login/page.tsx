@@ -5,6 +5,7 @@ import axios, { AxiosError } from 'axios'
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 
 import { useAuth } from '@/hooks/auth'
+import ApplicationLogo from '@/components/ApplicationLogo'
 
 interface Values {
   email: string
@@ -42,8 +43,14 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-      <div className="w-full sm:max-w-md mt-6 px-6 py-4 overflow-hidden">
-        <div className="space-y-3 text-black mb-12">
+      <div className="w-full sm:max-w-md overflow-hidden space-y-6">
+        <div className="flex justify-center">
+          <Link href="/">
+            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+          </Link>
+        </div>
+
+        <div className="space-y-3 text-black">
           <h2 className="text-4xl leading-9 font-bold tracking-[-1px]">
             Login
           </h2>
@@ -111,14 +118,6 @@ const LoginPage = () => {
               className="mt-12 w-full px-4 py-3 bg-[#22A2BF] rounded-2xl text-white font-bold tracking-[-0.2px]">
               Login
             </button>
-
-            <div>
-              <Link
-                href="/register"
-                className="text-[#187691] text-sm leading-[150%] tracking-[-0.4px] font-bold">
-                Register account
-              </Link>
-            </div>
           </Form>
         </Formik>
       </div>
