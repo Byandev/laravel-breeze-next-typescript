@@ -33,7 +33,7 @@ const LoginPage = () => {
     }
   }
 
-  const SigninSchema = Yup.object().shape({
+  const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email('Invalid email')
       .required('The email field is required.'),
@@ -45,13 +45,13 @@ const LoginPage = () => {
       <div className="w-full sm:max-w-md mt-6 px-6 py-4 overflow-hidden">
         <div className="space-y-3 text-black mb-12">
           <h2 className="text-4xl leading-9 font-bold tracking-[-1px]">
-            Sign in
+            Login
           </h2>
         </div>
 
         <Formik
           onSubmit={submitForm}
-          validationSchema={SigninSchema}
+          validationSchema={LoginSchema}
           initialValues={{ email: '', password: '', remember: false }}>
           <Form>
             <div>
