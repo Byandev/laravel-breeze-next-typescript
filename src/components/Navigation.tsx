@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 import NavLink from '@/components/NavLink'
 import Dropdown from '@/components/Dropdown'
@@ -14,7 +14,7 @@ import { UserType } from '@/types/User'
 import { useAuth } from '@/hooks/auth'
 
 const Navigation = ({ user }: { user: UserType }) => {
-  const router = useRouter()
+  const pathname = usePathname()
 
   const { logout } = useAuth({})
   const [open, setOpen] = useState<boolean>(false)
@@ -34,9 +34,7 @@ const Navigation = ({ user }: { user: UserType }) => {
 
             {/* Navigation Links */}
             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-              <NavLink
-                href="/dashboard"
-                active={router.pathname === '/dashboard'}>
+              <NavLink href="/dashboard" active={pathname === '/dashboard'}>
                 Dashboard
               </NavLink>
             </div>
@@ -109,7 +107,7 @@ const Navigation = ({ user }: { user: UserType }) => {
           <div className="pt-2 pb-3 space-y-1">
             <ResponsiveNavLink
               href="/dashboard"
-              active={router.pathname === '/dashboard'}>
+              active={pathname === '/dashboard'}>
               Dashboard
             </ResponsiveNavLink>
           </div>
