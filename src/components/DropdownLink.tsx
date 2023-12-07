@@ -1,12 +1,12 @@
 import { Menu } from '@headlessui/react'
 import Link, { LinkProps } from 'next/link'
-import { ReactComponentElement, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 
 interface DropdownLinkProps extends LinkProps {
   children: ReactNode
 }
 
-interface DropdownButtonProps extends ReactComponentElement<'button'> {
+interface DropdownButtonProps extends ComponentProps<'button'> {
   children: ReactNode
 }
 
