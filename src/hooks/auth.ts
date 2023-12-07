@@ -91,10 +91,12 @@ export const useAuth = ({
     }
   }
 
-  const resendEmailVerification = ({ setStatus }) => {
-    axios
-      .post('/email/verification-notification')
-      .then(response => setStatus(response.data.status))
+  const resendEmailVerification = async () => {
+    try {
+      return await axios.post('/email/verification-notification')
+    } catch (error) {
+      throw error
+    }
   }
 
   const logout = async () => {
@@ -106,12 +108,19 @@ export const useAuth = ({
   }
 
   useEffect(() => {
-    if (middleware === 'guest' && redirectIfAuthenticated && user)
+    if (middleware === 'guest' && redirectIfAuthenticated && user) {
       router.push(redirectIfAuthenticated)
-    if (window.location.pathname === '/verify-email' && user?.email_verified_at)
+    }
+
+    if (
+      window.location.pathname === '/verify-email' &&
+      user?.email_verified_at &&
+      redirectIfAuthenticated
+    ) {
       router.push(redirectIfAuthenticated)
+    }
     if (middleware === 'auth' && error) logout()
-  }, [user, error])
+  }, [user, error, middleware, redirectIfAuthenticated])
 
   return {
     user,
