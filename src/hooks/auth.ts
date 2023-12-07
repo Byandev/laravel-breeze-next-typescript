@@ -59,20 +59,13 @@ export const useAuth = ({
     }
   }
 
-  const forgotPassword = async ({ setErrors, setStatus, email }) => {
-    await csrf()
-
-    setErrors([])
-    setStatus(null)
-
-    axios
-      .post('/forgot-password', { email })
-      .then(response => setStatus(response.data.status))
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
-      })
+  const forgotPassword = async (data: { email: string }) => {
+    try {
+      await csrf()
+      await axios.post('/forgot-password', data)
+    } catch (error) {
+      throw error
+    }
   }
 
   const resetPassword = async ({ setErrors, setStatus, ...props }) => {
