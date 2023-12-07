@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "axios": "^1.6.2",
     "formik": "^2.4.5",
     "next": "14.0.3",

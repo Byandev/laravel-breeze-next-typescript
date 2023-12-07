@@ -6,6 +6,7 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 
 import { useAuth } from '@/hooks/auth'
 import ApplicationLogo from '@/components/ApplicationLogo'
+import AuthCard from '@/components/AuthCard'
 
 interface Values {
   email: string
@@ -42,86 +43,91 @@ const LoginPage = () => {
   })
 
   return (
-    <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-      <div className="w-full sm:max-w-md overflow-hidden space-y-6">
-        <div className="flex justify-center">
-          <Link href="/">
-            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-          </Link>
-        </div>
+    <AuthCard
+      logo={
+        <Link href="/">
+          <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+        </Link>
+      }>
+      <Formik
+        onSubmit={submitForm}
+        validationSchema={LoginSchema}
+        initialValues={{ email: '', password: '', remember: false }}>
+        <Form className="space-y-4">
+          <div>
+            <label
+              htmlFor="email"
+              className="undefined block font-medium text-sm text-gray-700">
+              Email
+            </label>
 
-        <div className="space-y-3 text-black">
-          <h2 className="text-4xl leading-9 font-bold tracking-[-1px]">
-            Login
-          </h2>
-        </div>
+            <Field
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
 
-        <Formik
-          onSubmit={submitForm}
-          validationSchema={LoginSchema}
-          initialValues={{ email: '', password: '', remember: false }}>
-          <Form className="space-y-4">
-            <div>
+            <ErrorMessage
+              name="email"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
+
+          <div className="">
+            <label
+              htmlFor="password"
+              className="undefined block font-medium text-sm text-gray-700">
+              Password
+            </label>
+
+            <Field
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Password"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+
+            <ErrorMessage
+              name="password"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="remember" className="inline-flex items-center">
               <Field
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Email Address"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
+                type="checkbox"
+                name="remember"
+                className="rounded border-[#99A6AE] text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
 
-              <ErrorMessage
-                name="email"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
+              <span className="ml-2 text-[#252729] text-sm leading-[150%] tracking-[-0.4px] font-medium">
+                Remember me
+              </span>
+            </label>
+          </div>
 
-            <div className="">
-              <Field
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
-              />
-
-              <ErrorMessage
-                name="password"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label htmlFor="remember" className="inline-flex items-center">
-                <Field
-                  type="checkbox"
-                  name="remember"
-                  className="rounded border-[#99A6AE] text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-
-                <span className="ml-2 text-[#252729] text-sm leading-[150%] tracking-[-0.4px] font-medium">
-                  Remember me
-                </span>
-              </label>
-
-              <Link
-                href="/forgot-password"
-                className="text-[#187691] text-sm leading-[150%] tracking-[-0.4px] font-bold">
-                Forgot your password?
-              </Link>
-            </div>
+          <div className="flex items-center justify-end mt-4">
+            <Link
+              href="/forgot-password"
+              className="underline text-sm text-gray-600 hover:text-gray-900">
+              Forgot your password?
+            </Link>
 
             <button
               type="submit"
-              className="mt-12 w-full px-4 py-3 bg-[#22A2BF] rounded-2xl text-white font-bold tracking-[-0.2px]">
+              className="ml-3 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
               Login
             </button>
-          </Form>
-        </Formik>
-      </div>
-    </div>
+          </div>
+        </Form>
+      </Formik>
+    </AuthCard>
   )
 }
 
