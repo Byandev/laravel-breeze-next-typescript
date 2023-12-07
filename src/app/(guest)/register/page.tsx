@@ -6,6 +6,7 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 
 import { useAuth } from '@/hooks/auth'
 import ApplicationLogo from '@/components/ApplicationLogo'
+import AuthCard from '@/components/AuthCard'
 
 interface Values {
   name: string
@@ -44,110 +45,121 @@ const RegisterPage = () => {
   })
 
   return (
-    <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-      <div className="w-full sm:max-w-md overflow-hidden space-y-6">
-        <div className="flex justify-center">
-          <Link href="/">
-            <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-          </Link>
-        </div>
+    <AuthCard
+      logo={
+        <Link href="/">
+          <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+        </Link>
+      }>
+      <Formik
+        onSubmit={submitForm}
+        validationSchema={RegisterSchema}
+        initialValues={{
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
+        }}>
+        <Form className="space-y-4">
+          <div>
+            <label
+              htmlFor="name"
+              className="undefined block font-medium text-sm text-gray-700">
+              Name
+            </label>
 
-        <div className="space-y-3 text-black">
-          <h2 className="text-4xl leading-9 font-bold tracking-[-1px]">
-            Register
-          </h2>
-        </div>
+            <Field
+              id="name"
+              name="name"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
 
-        <Formik
-          onSubmit={submitForm}
-          validationSchema={RegisterSchema}
-          initialValues={{
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-          }}>
-          <Form className="space-y-4">
-            <div>
-              <Field
-                id="name"
-                name="name"
-                placeholder="Name"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
-              />
+            <ErrorMessage
+              name="name"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
 
-              <ErrorMessage
-                name="name"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="undefined block font-medium text-sm text-gray-700">
+              Email
+            </label>
 
-            <div>
-              <Field
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Email Address"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
-              />
+            <Field
+              id="email"
+              name="email"
+              type="email"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
 
-              <ErrorMessage
-                name="email"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
+            <ErrorMessage
+              name="email"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
 
-            <div className="">
-              <Field
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
-              />
+          <div className="">
+            <label
+              htmlFor="password"
+              className="undefined block font-medium text-sm text-gray-700">
+              Password
+            </label>
 
-              <ErrorMessage
-                name="password"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
+            <Field
+              id="password"
+              name="password"
+              type="password"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
 
-            <div className="">
-              <Field
-                id="password_confirmation"
-                name="password_confirmation"
-                type="password"
-                placeholder="Confirm Password"
-                className="bg-white p-3 rounded-2xl w-full border border-[#E6E9EB] placeholder:text-[#99A6AE] leading-[150%] font-medium tracking-[-0.4px] text-[#252729]"
-              />
+            <ErrorMessage
+              name="password"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
 
-              <ErrorMessage
-                name="password_confirmation"
-                component="span"
-                className="text-xs text-red-500"
-              />
-            </div>
+          <div className="">
+            <label
+              htmlFor="password"
+              className="undefined block font-medium text-sm text-gray-700">
+              Confirm Password
+            </label>
+
+            <Field
+              id="password_confirmation"
+              name="password_confirmation"
+              type="password"
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+
+            <ErrorMessage
+              name="password_confirmation"
+              component="span"
+              className="text-xs text-red-500"
+            />
+          </div>
+
+          <div className="flex items-center justify-end mt-4">
+            <Link
+              href="/login"
+              className="underline text-sm text-gray-600 hover:text-gray-900">
+              Already registered?
+            </Link>
 
             <button
               type="submit"
-              className="w-full px-4 py-3 bg-[#22A2BF] rounded-2xl text-white font-bold tracking-[-0.2px]">
+              className="ml-4 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
               Register
             </button>
-
-            <div>
-              <Link
-                href="/login"
-                className="text-[#187691] text-sm leading-[150%] tracking-[-0.4px] font-bold">
-                Already registered?
-              </Link>
-            </div>
-          </Form>
-        </Formik>
-      </div>
-    </div>
+          </div>
+        </Form>
+      </Formik>
+    </AuthCard>
   )
 }
 
