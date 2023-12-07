@@ -43,6 +43,7 @@ const LoginPage = () => {
       }
     } finally {
       setSubmitting(false)
+      setStatus('')
     }
   }
 
