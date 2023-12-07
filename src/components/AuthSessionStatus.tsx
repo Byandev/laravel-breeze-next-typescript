@@ -5,19 +5,21 @@ interface AuthSessionStatusProps extends ComponentProps<'div'> {
 }
 
 const AuthSessionStatus = ({
-  status: string,
+  status,
   className,
   ...props
-}: AuthSessionStatusProps) => (
-  <>
-    {status && (
-      <div
-        className={`${className} font-medium text-sm text-green-600`}
-        {...props}>
-        {status}
-      </div>
-    )}
-  </>
-)
+}: AuthSessionStatusProps) => {
+  return (
+    <>
+      {status && (
+        <div
+          className={`${className} font-medium text-sm text-green-600`}
+          {...props}>
+          {status}
+        </div>
+      )}
+    </>
+  )
+}
 
 export default AuthSessionStatus

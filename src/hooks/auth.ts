@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { AxiosResponse } from 'axios'
 
 export const useAuth = ({
   middleware,
@@ -59,10 +60,12 @@ export const useAuth = ({
     }
   }
 
-  const forgotPassword = async (data: { email: string }) => {
+  const forgotPassword = async (data: {
+    email: string
+  }): Promise<AxiosResponse> => {
     try {
       await csrf()
-      await axios.post('/forgot-password', data)
+      return await axios.post('/forgot-password', data)
     } catch (error) {
       throw error
     }

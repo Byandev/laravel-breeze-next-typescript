@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import Link from 'next/link'
 import axios, { AxiosError } from 'axios'
@@ -8,12 +8,15 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 import { useAuth } from '@/hooks/auth'
 import AuthCard from '@/components/AuthCard'
 import ApplicationLogo from '@/components/ApplicationLogo'
+import AuthSessionStatus from '@/components/AuthSessionStatus'
 
 interface FormValues {
   email: string
 }
 
 const ForgotPasswordPage = () => {
+  const [status, setStatus] = useState<string>('')
+
   const { forgotPassword } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
@@ -30,8 +33,11 @@ const ForgotPasswordPage = () => {
     { setSubmitting, setErrors }: FormikHelpers<FormValues>,
   ): Promise<any> => {
     try {
-      await forgotPassword(values)
+      const response = await forgotPassword(values)
+
+      setStatus(response.data.status)
     } catch (error: Error | AxiosError | any) {
+      setStatus('')
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         setErrors(error.response?.data?.errors)
       }
@@ -52,6 +58,8 @@ const ForgotPasswordPage = () => {
         and we will email you a password reset link that will allow you to
         choose a new one.
       </div>
+
+      <AuthSessionStatus className="mb-4" status={status} />
 
       <Formik
         onSubmit={submitForm}
