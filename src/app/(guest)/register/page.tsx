@@ -42,6 +42,9 @@ const RegisterPage = () => {
       .email('Invalid email')
       .required('The email field is required.'),
     password: Yup.string().required('The password field is required.'),
+    password_confirmation: Yup.string()
+      .required('Please confirm password.')
+      .oneOf([Yup.ref('password')], 'Your passwords do not match.'),
   })
 
   return (

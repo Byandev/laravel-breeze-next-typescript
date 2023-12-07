@@ -1,8 +1,8 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { AxiosResponse } from 'axios'
+import { useRouter, useParams } from 'next/navigation'
 
 export const useAuth = ({
   middleware,
@@ -12,6 +12,7 @@ export const useAuth = ({
   redirectIfAuthenticated?: string
 }) => {
   const router = useRouter()
+  const params = useParams()
 
   const {
     data: user,
@@ -71,22 +72,23 @@ export const useAuth = ({
     }
   }
 
-  const resetPassword = async ({ setErrors, setStatus, ...props }) => {
-    await csrf()
+  const resetPassword = async (data: {
+    email: string
+    password: string
+    password_confirmation: string
+  }) => {
+    try {
+      await csrf()
 
-    setErrors([])
-    setStatus(null)
-
-    axios
-      .post('/reset-password', { token: router.query.token, ...props })
-      .then(response =>
-        router.push('/login?reset=' + btoa(response.data.status)),
-      )
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
+      const response = await axios.post('/reset-password', {
+        ...data,
+        token: params.token,
       })
+
+      router.push('/login?reset=' + btoa(response.data.status))
+    } catch (error) {
+      throw error
+    }
   }
 
   const resendEmailVerification = ({ setStatus }) => {
