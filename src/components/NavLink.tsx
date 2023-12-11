@@ -1,10 +1,7 @@
-import React, { ComponentProps, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import Link, { LinkProps } from 'next/link'
 
-type Props = {}
-
-import Link from 'next/link'
-
-interface NavLinkProps extends ComponentProps<'a'> {
+interface NavLinkProps extends LinkProps {
   active?: boolean
   children: ReactNode
 }

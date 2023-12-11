@@ -1,7 +1,8 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { AxiosResponse } from 'axios'
+import { useRouter, useParams } from 'next/navigation'
 
 export const useAuth = ({
   middleware,
@@ -11,6 +12,7 @@ export const useAuth = ({
   redirectIfAuthenticated?: string
 }) => {
   const router = useRouter()
+  const params = useParams()
 
   const {
     data: user,
@@ -59,44 +61,42 @@ export const useAuth = ({
     }
   }
 
-  const forgotPassword = async ({ setErrors, setStatus, email }) => {
-    await csrf()
-
-    setErrors([])
-    setStatus(null)
-
-    axios
-      .post('/forgot-password', { email })
-      .then(response => setStatus(response.data.status))
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
-      })
+  const forgotPassword = async (data: {
+    email: string
+  }): Promise<AxiosResponse> => {
+    try {
+      await csrf()
+      return await axios.post('/forgot-password', data)
+    } catch (error) {
+      throw error
+    }
   }
 
-  const resetPassword = async ({ setErrors, setStatus, ...props }) => {
-    await csrf()
+  const resetPassword = async (data: {
+    email: string
+    password: string
+    password_confirmation: string
+  }) => {
+    try {
+      await csrf()
 
-    setErrors([])
-    setStatus(null)
-
-    axios
-      .post('/reset-password', { token: router.query.token, ...props })
-      .then(response =>
-        router.push('/login?reset=' + btoa(response.data.status)),
-      )
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
+      const response = await axios.post('/reset-password', {
+        ...data,
+        token: params.token,
       })
+
+      router.push('/login?reset=' + btoa(response.data.status))
+    } catch (error) {
+      throw error
+    }
   }
 
-  const resendEmailVerification = ({ setStatus }) => {
-    axios
-      .post('/email/verification-notification')
-      .then(response => setStatus(response.data.status))
+  const resendEmailVerification = async () => {
+    try {
+      return await axios.post('/email/verification-notification')
+    } catch (error) {
+      throw error
+    }
   }
 
   const logout = async () => {
@@ -108,12 +108,19 @@ export const useAuth = ({
   }
 
   useEffect(() => {
-    if (middleware === 'guest' && redirectIfAuthenticated && user)
+    if (middleware === 'guest' && redirectIfAuthenticated && user) {
       router.push(redirectIfAuthenticated)
-    if (window.location.pathname === '/verify-email' && user?.email_verified_at)
+    }
+
+    if (
+      window.location.pathname === '/verify-email' &&
+      user?.email_verified_at &&
+      redirectIfAuthenticated
+    ) {
       router.push(redirectIfAuthenticated)
+    }
     if (middleware === 'auth' && error) logout()
-  }, [user, error])
+  }, [user, error, middleware, redirectIfAuthenticated])
 
   return {
     user,

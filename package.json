@@ -1,7 +1,15 @@
 {
-  "name": "myfinance-web",
+  "name": "laravel-breeze-next-typescript",
   "version": "0.1.0",
   "private": true,
+  "keywords": [
+    "laravel",
+    "breeze",
+    "laravel-breeze",
+    "next",
+    "typescript",
+    "next-v14"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +17,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@tailwindcss/forms": "^0.5.7",
     "axios": "^1.6.2",
     "formik": "^2.4.5",
     "next": "14.0.3",

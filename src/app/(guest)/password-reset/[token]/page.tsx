@@ -2,31 +2,29 @@
 import Link from 'next/link'
 import * as Yup from 'yup'
 import axios, { AxiosError } from 'axios'
+import { useSearchParams } from 'next/navigation'
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 
 import { useAuth } from '@/hooks/auth'
-import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
+import ApplicationLogo from '@/components/ApplicationLogo'
 
 interface Values {
-  name: string
   email: string
   password: string
   password_confirmation: string
 }
 
-const RegisterPage = () => {
-  const { register } = useAuth({
-    middleware: 'guest',
-    redirectIfAuthenticated: '/dashboard',
-  })
+const PasswordResetPage = () => {
+  const query = useSearchParams()
+  const { resetPassword } = useAuth({ middleware: 'guest' })
 
   const submitForm = async (
     values: Values,
     { setSubmitting, setErrors }: FormikHelpers<Values>,
   ): Promise<any> => {
     try {
-      await register(values)
+      await resetPassword(values)
     } catch (error: Error | AxiosError | any) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         setErrors(error.response?.data?.errors)
@@ -36,8 +34,7 @@ const RegisterPage = () => {
     }
   }
 
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string().required('The name field is required.'),
+  const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .email('Invalid email')
       .required('The email field is required.'),
@@ -56,34 +53,13 @@ const RegisterPage = () => {
       }>
       <Formik
         onSubmit={submitForm}
-        validationSchema={RegisterSchema}
+        validationSchema={ForgotPasswordSchema}
         initialValues={{
-          name: '',
-          email: '',
           password: '',
           password_confirmation: '',
+          email: query.get('email') ?? '',
         }}>
         <Form className="space-y-4">
-          <div>
-            <label
-              htmlFor="name"
-              className="undefined block font-medium text-sm text-gray-700">
-              Name
-            </label>
-
-            <Field
-              id="name"
-              name="name"
-              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-
-            <ErrorMessage
-              name="name"
-              component="span"
-              className="text-xs text-red-500"
-            />
-          </div>
-
           <div>
             <label
               htmlFor="email"
@@ -95,7 +71,8 @@ const RegisterPage = () => {
               id="email"
               name="email"
               type="email"
-              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              disabled
+              className="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-75 disabled:cursor-not-allowed"
             />
 
             <ErrorMessage
@@ -148,16 +125,10 @@ const RegisterPage = () => {
           </div>
 
           <div className="flex items-center justify-end mt-4">
-            <Link
-              href="/login"
-              className="underline text-sm text-gray-600 hover:text-gray-900">
-              Already registered?
-            </Link>
-
             <button
               type="submit"
               className="ml-4 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-              Register
+              Reset Password
             </button>
           </div>
         </Form>
@@ -166,4 +137,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default PasswordResetPage

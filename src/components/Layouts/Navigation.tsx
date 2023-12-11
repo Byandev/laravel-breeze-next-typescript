@@ -1,13 +1,24 @@
 import Link from 'next/link'
-import React from 'react'
-import ApplicationLogo from './ApplicationLogo'
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+
+import NavLink from '@/components/NavLink'
+import Dropdown from '@/components/Dropdown'
+import ResponsiveNavLink, {
+  ResponsiveNavButton,
+} from '@/components/ResponsiveNavLink'
+import { DropdownButton } from '@/components/DropdownLink'
+import ApplicationLogo from '@/components/ApplicationLogo'
+
 import { UserType } from '@/types/User'
+import { useAuth } from '@/hooks/auth'
 
-type Props = {
-  user: UserType
-}
+const Navigation = ({ user }: { user: UserType }) => {
+  const pathname = usePathname()
 
-function Navigation({ user }: Props) {
+  const { logout } = useAuth({})
+  const [open, setOpen] = useState<boolean>(false)
+
   return (
     <nav className="bg-white border-b border-gray-100">
       {/* Primary Navigation Menu */}
@@ -22,20 +33,18 @@ function Navigation({ user }: Props) {
             </div>
 
             {/* Navigation Links */}
-            {/* <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-              <NavLink
-                href="/dashboard"
-                active={router.pathname === '/dashboard'}>
+            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+              <NavLink href="/dashboard" active={pathname === '/dashboard'}>
                 Dashboard
               </NavLink>
-            </div> */}
+            </div>
           </div>
 
           {/* Settings Dropdown */}
-          {/* <div className="hidden sm:flex sm:items-center sm:ml-6">
+          <div className="hidden sm:flex sm:items-center sm:ml-6">
             <Dropdown
               align="right"
-              width="48"
+              width={48}
               trigger={
                 <button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
                   <div>{user?.name}</div>
@@ -54,12 +63,13 @@ function Navigation({ user }: Props) {
                   </div>
                 </button>
               }>
+              {/* Authentication */}
               <DropdownButton onClick={logout}>Logout</DropdownButton>
             </Dropdown>
-          </div> */}
+          </div>
 
           {/* Hamburger */}
-          {/* <div className="-mr-2 flex items-center sm:hidden">
+          <div className="-mr-2 flex items-center sm:hidden">
             <button
               onClick={() => setOpen(open => !open)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
@@ -87,21 +97,22 @@ function Navigation({ user }: Props) {
                 )}
               </svg>
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
 
       {/* Responsive Navigation Menu */}
-      {/* {open && (
+      {open && (
         <div className="block sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
             <ResponsiveNavLink
               href="/dashboard"
-              active={router.pathname === '/dashboard'}>
+              active={pathname === '/dashboard'}>
               Dashboard
             </ResponsiveNavLink>
           </div>
 
+          {/* Responsive Settings Options */}
           <div className="pt-4 pb-1 border-t border-gray-200">
             <div className="flex items-center px-4">
               <div className="flex-shrink-0">
@@ -131,11 +142,12 @@ function Navigation({ user }: Props) {
             </div>
 
             <div className="mt-3 space-y-1">
+              {/* Authentication */}
               <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
             </div>
           </div>
         </div>
-      )} */}
+      )}
     </nav>
   )
 }

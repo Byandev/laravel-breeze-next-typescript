@@ -1,7 +1,7 @@
 'use client'
-import Navigation from '@/components/Navigation'
-import { useAuth } from '@/hooks/auth'
 import { ReactNode } from 'react'
+import { useAuth } from '@/hooks/auth'
+import Navigation from '@/components/Layouts/Navigation'
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth({ middleware: 'auth' })

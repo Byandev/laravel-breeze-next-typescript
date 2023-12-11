@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { Quicksand } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import './globals.css'
 
-const quicksand = Quicksand({ subsets: ['latin'] })
+const nunito = Nunito({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${quicksand.className} text-gray-900 antialiased`}>
+      <body className={`${nunito.className} text-gray-900 antialiased`}>
         {children}
       </body>
     </html>
